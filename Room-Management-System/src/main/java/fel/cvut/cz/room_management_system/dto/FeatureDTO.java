@@ -1,4 +1,4 @@
 package fel.cvut.cz.room_management_system.dto;
 
-public record RoomFeatureDTO(FeatureDTO feature) {
+public record FeatureDTO(String name) {
 }

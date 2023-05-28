@@ -13,7 +13,7 @@ public class Feature {
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(name = "feature", nullable = false)
-    private RoomFeatureEnum feature;
+    private RoomFeatureEnum featureName;
     @OneToMany(mappedBy = "feature")
     private List<RoomFeature> roomFeatures;
 
@@ -25,12 +25,12 @@ public class Feature {
         this.id = id;
     }
 
-    public RoomFeatureEnum getFeature() {
-        return feature;
+    public RoomFeatureEnum getFeatureName() {
+        return featureName;
     }
 
-    public void setFeature(RoomFeatureEnum feature) {
-        this.feature = feature;
+    public void setFeatureName(RoomFeatureEnum feature) {
+        this.featureName = feature;
     }
 
     public List<RoomFeature> getRoomFeatures() {
