@@ -23,7 +23,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "system_user_id", insertable = false, updatable = false)
-    private User myUser;
+    private User systemUser;
 
     public Long getId() {
         return id;
@@ -58,10 +58,10 @@ public class Reservation {
     }
 
     public User getUser() {
-        return myUser;
+        return systemUser;
     }
 
     public void setUser(User user) {
-        this.myUser = user;
+        this.systemUser = user;
     }
 }

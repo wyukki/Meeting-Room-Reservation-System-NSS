@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "system_user")
 public class User {
 
     @Id
@@ -15,7 +15,7 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "myUser")
+    @OneToMany(mappedBy = "systemUser")
     private List<Reservation> reservations;
 
     public Long getId() {
