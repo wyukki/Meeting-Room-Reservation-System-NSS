@@ -4,6 +4,8 @@ import fel.cvut.cz.room_management_system.enums.NoiseLevel;
 
 import fel.cvut.cz.room_management_system.enums.RoomLayoutEnum;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -39,7 +41,8 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomSlot> roomSlots;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "building_id", insertable = false, updatable = false)
     private Building building;
 
