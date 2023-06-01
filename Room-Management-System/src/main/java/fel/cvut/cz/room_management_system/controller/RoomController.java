@@ -36,4 +36,9 @@ public class RoomController {
     public ResponseEntity<RoomDTO> getRoomById(@PathVariable Long id) throws NotFoundException {
         return new ResponseEntity<>(roomService.getRoomById(id), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/name/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getRoomNameById(@PathVariable Long id) throws NotFoundException {
+        return new ResponseEntity<>(roomService.getRoomById(id).name(), HttpStatus.OK);
+    }
 }
