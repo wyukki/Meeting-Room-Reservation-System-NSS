@@ -8,13 +8,14 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "room")
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
@@ -28,8 +29,9 @@ public class Room {
 
     @Column(name = "capacity", nullable = false)
     private Long capacity;
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoomFeature> roomFeatures;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<RoomFeature> roomFeatures;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "noise_level")
@@ -94,12 +96,15 @@ public class Room {
         this.capacity = capacity;
     }
 
-    public List<RoomFeature> getRoomFeatures() {
+    public Set<RoomFeature> getRoomFeatures() {
         return roomFeatures;
     }
 
-    public void setRoomFeatures(List<RoomFeature> roomFeatures) {
-        this.roomFeatures = roomFeatures;
+    public void setRoomFeatures(Set<RoomFeature> roomFeatures) {
+        this.roomFeatures.clear();
+        if (roomFeatures != null) {
+            this.roomFeatures.addAll(roomFeatures);
+        }
     }
 
     public NoiseLevel getNoiseLevel() {

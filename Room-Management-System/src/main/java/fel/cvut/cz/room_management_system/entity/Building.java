@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name="building")
 public class Building {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String name;

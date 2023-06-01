@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 @Table(name = "room_slot")
 public class RoomSlot {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "scheduled_from", nullable = false)
     private ZonedDateTime scheduled_from;

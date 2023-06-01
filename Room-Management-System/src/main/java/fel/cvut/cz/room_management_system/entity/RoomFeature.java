@@ -17,17 +17,15 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "room_feature")
 public class RoomFeature {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "room_id", insertable = false, updatable = false)
     @JsonBackReference
     private Room room;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "feature_id", insertable = false, updatable = false)
     @JsonBackReference
     private Feature feature;
