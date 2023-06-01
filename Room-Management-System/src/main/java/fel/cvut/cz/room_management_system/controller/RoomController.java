@@ -1,8 +1,6 @@
 package fel.cvut.cz.room_management_system.controller;
 
-import fel.cvut.cz.room_management_system.dto.PagedResponse;
-import fel.cvut.cz.room_management_system.dto.RoomDTO;
-import fel.cvut.cz.room_management_system.dto.RoomDashboardDTO;
+import fel.cvut.cz.room_management_system.dto.*;
 import fel.cvut.cz.room_management_system.exceptions.NotFoundException;
 import fel.cvut.cz.room_management_system.service.RoomDashboardService;
 import fel.cvut.cz.room_management_system.service.RoomService;
@@ -11,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
