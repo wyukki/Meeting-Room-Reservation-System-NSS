@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class BuildingServiceImpl implements BuildingService {
     private final BuildingRepository buildingRepository;
     private final BuildingMapper mapper;
+
     @Autowired
     public BuildingServiceImpl(BuildingRepository buildingRepository, BuildingMapper mapper) {
         this.buildingRepository = buildingRepository;

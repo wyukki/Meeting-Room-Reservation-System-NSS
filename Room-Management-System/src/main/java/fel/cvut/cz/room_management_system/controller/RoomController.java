@@ -36,4 +36,12 @@ public class RoomController {
     public ResponseEntity<RoomDTO> getRoomById(@PathVariable Long id) throws NotFoundException {
         return new ResponseEntity<>(roomService.getRoomById(id), HttpStatus.OK);
     }
+  
+    @PutMapping(value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RoomFeatureDTO>> updateRoomFeatures(@PathVariable Long id,
+                                                                   @RequestBody List<FeatureDTO> requestFeatures) throws NotFoundException {
+        return new ResponseEntity<>(roomService.updateRoomFeatures(id, requestFeatures), HttpStatus.OK);
+    }
 }
