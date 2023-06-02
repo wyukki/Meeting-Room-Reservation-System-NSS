@@ -13,6 +13,7 @@ import fel.cvut.cz.reservation_management_system.repository.UserRepository;
 import fel.cvut.cz.reservation_management_system.service.ReservationService;
 import fel.cvut.cz.reservation_management_system.service.UserService;
 import fel.cvut.cz.reservation_management_system.service.constants.RMSConstants;
+import fel.cvut.cz.reservation_management_system.service.kafka.NotificationProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserMapper userMapper;
 
     private final UserRepository userRepository;
+
+    @Autowired
+    NotificationProducer notificationProducer;
 
     @Autowired
     public ReservationServiceImpl(
@@ -92,6 +96,7 @@ public class ReservationServiceImpl implements ReservationService {
 
             makeReservation(request);
 
+            notificationProducer.sendEmail(request.userId());
             return true;
         }
 
@@ -113,6 +118,7 @@ public class ReservationServiceImpl implements ReservationService {
                         request.from().plusDays(i), request.to().plusDays(i), request.recurrent()));
             }
 
+            notificationProducer.sendEmail(request.userId());
             return true;
         } else if (RecurrentEnum.WEEK.equals(request.recurrent())) {
             //check every week
@@ -129,6 +135,7 @@ public class ReservationServiceImpl implements ReservationService {
                         request.from().plusWeeks(i), request.to().plusWeeks(i), request.recurrent()));
             }
 
+            notificationProducer.sendEmail(request.userId());
             return true;
         } else if (RecurrentEnum.MONTH.equals(request.recurrent())) {
             for (int i = 0; i <= 6; ++i) {
@@ -144,6 +151,7 @@ public class ReservationServiceImpl implements ReservationService {
                         request.from().plusMonths(i), request.to().plusMonths(i), request.recurrent()));
             }
 
+            notificationProducer.sendEmail(request.userId());
             return true;
         } else if (RecurrentEnum.YEAR.equals(request.recurrent())) {
             //TODO
