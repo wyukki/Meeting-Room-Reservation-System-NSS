@@ -14,6 +14,7 @@ import fel.cvut.cz.reservation_management_system.service.ReservationService;
 import fel.cvut.cz.reservation_management_system.service.UserService;
 import fel.cvut.cz.reservation_management_system.service.constants.RMSConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,7 +50,10 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Cacheable(cacheNames = {"reservations"})
     public List<ReservationWithNameDto> getAllReservationsByRoomId(Long id) {
+        System.out.println("CALL DB FROM getAllReservationsByRoomId");
+
         return reservationRepository.findAll().stream().filter(reservation -> reservation.getRoomId().equals(id))
                 .map(reservationMapper::entityToDto).map(reservationDto ->
                         new ReservationWithNameDto(
@@ -65,7 +69,9 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Cacheable(cacheNames = {"reservations"})
     public List<ReservationDto> getReservationByUserId(Long id) {
+        System.out.println("CALL DB FROM getReservationByUserId");
         return reservationRepository.findAll().stream().filter(reservation -> reservation.getUser().getId().equals(id))
                 .map(reservationMapper::entityToDto).collect(Collectors.toList());
     }
