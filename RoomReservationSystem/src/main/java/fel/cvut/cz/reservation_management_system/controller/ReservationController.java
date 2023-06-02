@@ -1,15 +1,13 @@
 package fel.cvut.cz.reservation_management_system.controller;
 
 import fel.cvut.cz.reservation_management_system.dto.ReservationDto;
+import fel.cvut.cz.reservation_management_system.dto.ReservationRequest;
 import fel.cvut.cz.reservation_management_system.dto.ReservationWithNameDto;
 import fel.cvut.cz.reservation_management_system.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,5 +36,10 @@ public class ReservationController {
         reservationService.deleteReservation(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/reservations")
+    public ResponseEntity<Boolean> createReservation(@RequestBody ReservationRequest request) {
+        return new ResponseEntity<>(reservationService.createReservation(request), HttpStatus.OK);
     }
 }

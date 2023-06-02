@@ -22,7 +22,7 @@ public class Reservation {
     private ZonedDateTime dateTo;
 
     @ManyToOne
-    @JoinColumn(name = "system_user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "system_user_id", updatable = false)
     private User systemUser;
 
     public Long getId() {

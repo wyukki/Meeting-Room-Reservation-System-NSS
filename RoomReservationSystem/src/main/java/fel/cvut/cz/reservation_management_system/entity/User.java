@@ -1,7 +1,9 @@
 package fel.cvut.cz.reservation_management_system.entity;
 
+import fel.cvut.cz.reservation_management_system.dto.ReservationRequest;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,11 +14,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @OneToMany(mappedBy = "systemUser")
     private List<Reservation> reservations;
+
+    public void addReservation(Reservation reservation){
+        if (reservations == null){
+            reservations = new ArrayList<>();
+        }
+        reservations.add(reservation);
+    }
 
     public Long getId() {
         return id;

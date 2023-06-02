@@ -1,6 +1,7 @@
 package fel.cvut.cz.reservation_management_system.service;
 
 import fel.cvut.cz.reservation_management_system.dto.ReservationDto;
+import fel.cvut.cz.reservation_management_system.dto.ReservationRequest;
 import fel.cvut.cz.reservation_management_system.dto.ReservationWithNameDto;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface ReservationService {
 
     List<ReservationDto> getReservationByUserId(Long id);
 
+    boolean createReservation(ReservationRequest request);
 }
