@@ -14,6 +14,7 @@ import fel.cvut.cz.reservation_management_system.service.ReservationService;
 import fel.cvut.cz.reservation_management_system.service.UserService;
 import fel.cvut.cz.reservation_management_system.service.constants.RMSConstants;
 import fel.cvut.cz.reservation_management_system.service.kafka.NotificationProducer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
+@Slf4j
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -57,7 +59,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Cacheable(cacheNames = {"reservations"})
     public List<ReservationWithNameDto> getAllReservationsByRoomId(Long id) {
-        System.out.println("CALL DB FROM getAllReservationsByRoomId");
+        log.debug("CALL DB FROM getAllReservationsByRoomId CHECK");
 
         return reservationRepository.findAll().stream().filter(reservation -> reservation.getRoomId().equals(id))
                 .map(reservationMapper::entityToDto).map(reservationDto ->
@@ -76,7 +78,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Cacheable(cacheNames = {"reservations"})
     public List<ReservationDto> getReservationByUserId(Long id) {
-        System.out.println("CALL DB FROM getReservationByUserId");
+        log.debug("CALL DB FROM getReservationByUserId CHECK");
         return reservationRepository.findAll().stream().filter(reservation -> reservation.getUser().getId().equals(id))
                 .map(reservationMapper::entityToDto).collect(Collectors.toList());
     }
