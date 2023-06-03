@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getOrCreateUserByEmail(String email) {
-         User user = userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email);
 
          if(user == null){
              user = new User();

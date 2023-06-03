@@ -1,4 +1,4 @@
-package java.fel.cvut.cz.reservation_management_system.service.kafka;
+package fel.cvut.cz.reservation_management_system.service.kafka;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;

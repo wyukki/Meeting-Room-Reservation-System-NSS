@@ -5,8 +5,7 @@ import fel.cvut.cz.reservation_management_system.exception.NotFoundException;
 public enum RecurrentEnum {
     DAY("DAY"),
     WEEK("WEEK"),
-    MONTH("MONTH"),
-    YEAR("YEAR");
+    MONTH("MONTH");
 
     private final String value;
 

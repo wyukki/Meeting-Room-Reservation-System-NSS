@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -86,18 +87,10 @@ public class ReservationServiceImpl implements ReservationService {
             return false;
         }
 
+        List<Reservation> allReservations = reservationRepository.findAll();
+
         if (request.recurrent() == null) {
-            //create one time reservation
-            for (Reservation reservation : reservationRepository.findAll()) {
-                if (reservationTimeIntersects(request.from(), request.to(), reservation)) {
-                    return false;
-                }
-            }
-
-            makeReservation(request);
-
-            notificationProducer.sendEmail(request.userId());
-            return true;
+            return createNonRecurrentReservation(request, allReservations);
         }
 
         //create recurrent reservations
@@ -105,63 +98,77 @@ public class ReservationServiceImpl implements ReservationService {
         //if we have weekly frequency, reservation will be created for next 4 weeks
         //if we have monthly frequency, reservation will be created for next 6 month
         if (RecurrentEnum.DAY.equals(request.recurrent())) {
-            for (int i = 0; i <= 7; ++i) {
-                for (Reservation reservation : reservationRepository.findAll()) {
-                    if (reservationTimeIntersects(request.from().plusDays(i), request.to().plusDays(i), reservation)) {
-                        return false;
-                    }
-                }
-            }
-
-            for (int i = 0; i <= 7; ++i) {
-                makeReservation(new ReservationRequest(request.buildingId(), request.roomId(), request.userId(),
-                        request.from().plusDays(i), request.to().plusDays(i), request.recurrent()));
-            }
-
-            notificationProducer.sendEmail(request.userId());
-            return true;
+            return createRecurrentDailyReservations(request, allReservations);
         } else if (RecurrentEnum.WEEK.equals(request.recurrent())) {
-            //check every week
-            for (int i = 0; i <= 4; ++i) {
-                for (Reservation reservation : reservationRepository.findAll()) {
-                    if (reservationTimeIntersects(request.from().plusWeeks(i), request.to().plusWeeks(i), reservation)) {
-                        return false;
-                    }
-                }
-            }
-
-            for (int i = 0; i <= 4; ++i) {
-                makeReservation(new ReservationRequest(request.buildingId(), request.roomId(), request.userId(),
-                        request.from().plusWeeks(i), request.to().plusWeeks(i), request.recurrent()));
-            }
-
-            notificationProducer.sendEmail(request.userId());
-            return true;
+            return createRecurrentWeeklyReservations(request, allReservations);
         } else if (RecurrentEnum.MONTH.equals(request.recurrent())) {
-            for (int i = 0; i <= 6; ++i) {
-                for (Reservation reservation : reservationRepository.findAll()) {
-                    if (reservationTimeIntersects(request.from().plusMonths(i), request.to().plusMonths(i), reservation)) {
-                        return false;
-                    }
-                }
-            }
+            return createRecurrentMonthlyReservations(request, allReservations);
+        }
 
-            for (int i = 0; i <= 6; ++i) {
-                makeReservation(new ReservationRequest(request.buildingId(), request.roomId(), request.userId(),
-                        request.from().plusMonths(i), request.to().plusMonths(i), request.recurrent()));
-            }
+        return false;
+    }
 
-            notificationProducer.sendEmail(request.userId());
-            return true;
-        } else if (RecurrentEnum.YEAR.equals(request.recurrent())) {
-            //TODO
-            System.out.println("Not implemented yet!");
-            return false;
-        } else {
-            //unsupported RecurrentPeriod
+    private boolean createNonRecurrentReservation(ReservationRequest request, List<Reservation> allReservations) {
+        if (allReservations.stream()
+                .anyMatch(reservation ->
+                        reservationTimeIntersects(request.from(), request.to(), reservation))) {
             return false;
         }
+
+        makeReservation(request);
+
+        notificationProducer.sendEmail(request.userId());
+        return true;
     }
+
+    private boolean createRecurrentDailyReservations(ReservationRequest request, List<Reservation> allReservations) {
+        if (IntStream.rangeClosed(0, RMSConstants.WEEK_DAYS_NUM)
+                .anyMatch(i -> allReservations.stream().anyMatch(reservation ->
+                        reservationTimeIntersects(request.from().plusDays(i), request.to().plusDays(i), reservation)))) {
+            return false;
+        }
+
+        IntStream.rangeClosed(0, RMSConstants.WEEK_DAYS_NUM)
+                .forEach(i -> makeReservation(new ReservationRequest(request.buildingId(), request.roomId(),
+                        request.userId(), request.from().plusDays(i), request.to().plusDays(i), request.recurrent())));
+
+        notificationProducer.sendEmail(request.userId());
+
+        return true;
+    }
+
+    private boolean createRecurrentWeeklyReservations(ReservationRequest request, List<Reservation> allReservations) {
+        if (IntStream.rangeClosed(0, RMSConstants.WEEKS_IN_MONTH_NUM)
+                .anyMatch(i -> allReservations.stream().anyMatch(reservation ->
+                        reservationTimeIntersects(request.from().plusWeeks(i), request.to().plusWeeks(i), reservation)))) {
+            return false;
+        }
+
+        IntStream.rangeClosed(0, RMSConstants.WEEKS_IN_MONTH_NUM)
+                .forEach(i -> makeReservation(new ReservationRequest(request.buildingId(), request.roomId(), request.userId(),
+                        request.from().plusWeeks(i), request.to().plusWeeks(i), request.recurrent())));
+
+        notificationProducer.sendEmail(request.userId());
+
+        return true;
+    }
+
+    private boolean createRecurrentMonthlyReservations(ReservationRequest request, List<Reservation> allReservations) {
+        if (IntStream.rangeClosed(0, RMSConstants.SIX_MONTHS)
+                .anyMatch(i -> allReservations.stream().anyMatch(reservation ->
+                        reservationTimeIntersects(request.from().plusMonths(i), request.to().plusMonths(i), reservation)))) {
+            return false;
+        }
+
+        IntStream.rangeClosed(0, RMSConstants.SIX_MONTHS)
+                .forEach(i -> makeReservation(new ReservationRequest(request.buildingId(), request.roomId(), request.userId(),
+                        request.from().plusMonths(i), request.to().plusMonths(i), request.recurrent())));
+
+        notificationProducer.sendEmail(request.userId());
+
+        return true;
+    }
+
 
     private void makeReservation(ReservationRequest request) {
         Reservation reservation = new Reservation();
@@ -169,7 +176,6 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setDateFrom(request.from());
         reservation.setDateTo(request.to());
 
-        //getOrCreate user
         User user = userMapper.dtoToEntity(userService.getOrCreateUserByEmail(request.userId()));
         user.addReservation(reservation);
 
