@@ -31,9 +31,9 @@ public interface ReservationService {
      * Creates a reservation for a specific room.
      * It is possible to create either recurrent or non-recurrent reservations.
      * 3 kinds of recurrent reservations are available:
-     * DAY - daily reservation,
-     * WEEK - weekly reservation,
-     * MONTH - monthly reservation.
+     * DAY - daily reservation (reservation will be created for next week),
+     * WEEK - weekly reservation (reservation will be created for next 4 weeks),
+     * MONTH - monthly reservation (reservation will be created for next 4 weeks).
      * <p>
      * First checks if it's possible to create reservation for required time,
      * if yes, creates reservation.

@@ -1,6 +1,5 @@
 package fel.cvut.cz.reservation_management_system.entity;
 
-import fel.cvut.cz.reservation_management_system.dto.ReservationRequest;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ public class User {
     @OneToMany(mappedBy = "systemUser")
     private List<Reservation> reservations;
 
-    public void addReservation(Reservation reservation){
-        if (reservations == null){
+    public void addReservation(Reservation reservation) {
+        if (reservations == null) {
             reservations = new ArrayList<>();
         }
         reservations.add(reservation);

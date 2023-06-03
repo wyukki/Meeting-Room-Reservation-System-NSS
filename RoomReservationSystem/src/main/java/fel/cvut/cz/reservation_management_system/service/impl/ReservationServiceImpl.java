@@ -95,10 +95,6 @@ public class ReservationServiceImpl implements ReservationService {
             return createNonRecurrentReservation(request, allReservations);
         }
 
-        //create recurrent reservations
-        //if we have daily frequency, reservation will be created for next week
-        //if we have weekly frequency, reservation will be created for next 4 weeks
-        //if we have monthly frequency, reservation will be created for next 6 month
         if (RecurrentEnum.DAY.equals(request.recurrent())) {
             return createRecurrentDailyReservations(request, allReservations);
         } else if (RecurrentEnum.WEEK.equals(request.recurrent())) {

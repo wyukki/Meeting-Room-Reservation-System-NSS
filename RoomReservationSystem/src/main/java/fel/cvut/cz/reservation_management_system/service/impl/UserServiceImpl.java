@@ -26,11 +26,11 @@ public class UserServiceImpl implements UserService {
     public UserDto getOrCreateUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
 
-         if(user == null){
-             user = new User();
-             user.setEmail(email);
-             user.setReservations(null);
-         }
+        if (user == null) {
+            user = new User();
+            user.setEmail(email);
+            user.setReservations(null);
+        }
 
         return userMapper.entityToDto(user);
     }
