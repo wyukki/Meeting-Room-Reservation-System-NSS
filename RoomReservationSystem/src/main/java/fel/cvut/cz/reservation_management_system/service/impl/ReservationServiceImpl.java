@@ -14,6 +14,7 @@ import fel.cvut.cz.reservation_management_system.service.ReservationService;
 import fel.cvut.cz.reservation_management_system.service.UserService;
 import fel.cvut.cz.reservation_management_system.service.constants.RMSConstants;
 import fel.cvut.cz.reservation_management_system.service.kafka.NotificationProducer;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,8 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    NotificationProducer notificationProducer;
+    private final NotificationProducer notificationProducer;
 
     @Autowired
     public ReservationServiceImpl(
@@ -48,12 +48,14 @@ public class ReservationServiceImpl implements ReservationService {
             ReservationMapper reservationMapper,
             UserService userService,
             UserMapper userMapper,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            NotificationProducer notificationProducer) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
         this.userService = userService;
         this.userMapper = userMapper;
         this.userRepository = userRepository;
+        this.notificationProducer = notificationProducer;
     }
 
     @Override
@@ -84,6 +86,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public boolean createReservation(ReservationRequest request) {
         if (request == null) {
             return false;
